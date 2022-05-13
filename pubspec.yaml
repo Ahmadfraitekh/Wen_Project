@@ -36,6 +36,8 @@ dependencies:
   font_awesome_flutter: ^9.1.0
   otp_text_field: ^1.1.1 
   dropdown_search: ^0.6.3
+  firebase_auth: ^3.3.17
+  firebase_core: ^1.16.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "141308022191",
+    "project_id": "wyn-project-99cc5",
+    "storage_bucket": "wyn-project-99cc5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141308022191:android:01b6d0a2a3b60dbc4bb35a",
+        "android_client_info": {
+          "package_name": "com.example.wyn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "141308022191-of81nuaesjde3i9jkqaabolq3bkbeprj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqgvfKZe2c4aDufxqdOYRpr-OcV2oTGj0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "141308022191-of81nuaesjde3i9jkqaabolq3bkbeprj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

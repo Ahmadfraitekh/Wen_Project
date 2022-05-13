@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   double _headerHeight = 150;
-  Key _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? email, password;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -50,19 +53,47 @@ class _LoginPageState extends State<LoginPage> {
                           key: _formKey,
                           child: Column(
                             children: [
-                              TextField(
-                                decoration: ThemeHelper().textInputDecoration(
-                                    'User Name', 'Enter your user name'),
+                              Container(
+                                child: TextFormField(
+                                  decoration: ThemeHelper()
+                                      .textInputDecoration("Enter your email"),
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: (val) {
+                                    if (!(val!.isEmpty) &&
+                                        !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                                            .hasMatch(val)) {
+                                      return "Enter a valid email address";
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    email = value;
+                                  },
+                                ),
+                                decoration:
+                                    ThemeHelper().inputBoxDecorationShaddow(),
                               ),
                               SizedBox(
-                                height: 30.0,
+                                height: 15.0,
                               ),
-                              TextField(
-                                obscureText: true,
-                                decoration: ThemeHelper().textInputDecoration(
-                                  'Password',
-                                  'Enter your password',
+                              Container(
+                                child: TextFormField(
+                                  decoration: ThemeHelper().textInputDecoration(
+                                      "Enter your password"),
+                                  keyboardType: TextInputType.visiblePassword,
+                                  validator: (val) {
+                                    if (!(val!.isEmpty)) {
+                                      return null;
+                                    }
+                                    return "Enter a valid password";
+                                  },
+                                  onChanged: (value) {
+                                    password = value;
+                                  },
+                                  obscureText: true,
                                 ),
+                                decoration:
+                                    ThemeHelper().inputBoxDecorationShaddow(),
                               ),
                               SizedBox(
                                 height: 15.0,
@@ -91,12 +122,10 @@ class _LoginPageState extends State<LoginPage> {
                                           color: Colors.white),
                                     ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ServicePage()));
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      signIn();
+                                    }
                                   },
                                 ),
                               ),
@@ -166,5 +195,22 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  signIn() async {
+    try {
+      await auth
+          .signInWithEmailAndPassword(
+        email: email!,
+        password: password!,
+      )
+          .then((value) {
+        print(value);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ServicePage()));
+      }).catchError((error) => print(error));
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

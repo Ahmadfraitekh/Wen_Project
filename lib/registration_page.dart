@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:wyn/custom_app_bar.dart';
@@ -20,6 +21,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool checkedValue = false;
   bool checkboxValue = false;
   double _headerHeight = 150;
+  String? email, password;
+  var emailController = TextEditingController();
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +84,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               }
                               return null;
                             },
+                            onChanged: (value) {
+                              email = value;
+                            },
+                          ),
+                          decoration: ThemeHelper().inputBoxDecorationShaddow(),
+                        ),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        Container(
+                          child: TextFormField(
+                            decoration: ThemeHelper()
+                                .textInputDecoration("Enter your password"),
+                            keyboardType: TextInputType.visiblePassword,
+                            validator: (val) {
+                              if (!(val!.isEmpty)) {
+                                return null;
+                              }
+                              return "Enter a valid password";
+                            },
+                            onChanged: (value) {
+                              password = value;
+                            },
+                            obscureText: true,
                           ),
                           decoration: ThemeHelper().inputBoxDecorationShaddow(),
                         ),
@@ -190,12 +218,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                     color: Colors.white),
                               ),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) => ServicePage()),
-                                    (Route<dynamic> route) => false);
+                                signUp();
                               }
                             },
                           ),
@@ -296,5 +321,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
       ),
     );
+  }
+
+  signUp() async {
+    try {
+      await auth
+          .createUserWithEmailAndPassword(
+        email: email!,
+        password: password!,
+      )
+          .then((value) {
+        print(value);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => ServicePage()),
+            (Route<dynamic> route) => false);
+      }).catchError((error) {
+        print(error);
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
